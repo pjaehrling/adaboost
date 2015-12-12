@@ -18,6 +18,7 @@ public class AdaBoost {
 	
 	private TestImage image;
 	private List<TrainingsData> trainingsData;
+	private static final double STOPPINGPERCENTAGE = 99.99 / 100;
 	
 	/* ****************************************************************************************
 	 * 							PUBLIC
@@ -53,14 +54,18 @@ public class AdaBoost {
 	public void train(StrongClassifierMJ strongClassifier) {
 		List<ImagePatternClassifier> classifierList = strongClassifier.getWeakClassifierList();
 		
-		// TODO (PJ): For t = 1, ..., T Loop. Bisher feste Anzahl. 
-		// Sollte ... Bis kein Fehler mehr? Ich bin mir nicht so recht sicher wie das abbricht!
-		for (int t = 0; t < 3; t++) {
+		double lastErrorSum = 0.0;
+		double currentErrorSum  = 0.0;
+		
+		do {
 			
 			// save the lowest errorRate, classifier index and test results (needed for update of test data weights)
 			double lowestErrorRate 			= Double.MAX_VALUE;
 			boolean[] lowestErrorResults 	= new boolean[this.trainingsData.size()];
 			int lowestErrorClassifierIndex	= -1; 
+			
+			lastErrorSum = currentErrorSum;
+			currentErrorSum = 0.0;
 		
 			// Normalize the test image weights
 			normalizeTestDataWeights(); // ... Step 1
@@ -71,7 +76,7 @@ public class AdaBoost {
 				
 				
 				// save the current errorRate and test results
-				double currentErrorRate  = 0.0;
+				double currentErrorRate = 0.0;
 				boolean[] currentResults = new boolean[this.trainingsData.size()]; // save which images got an error
 				
 				// ... with each image
@@ -83,6 +88,7 @@ public class AdaBoost {
 					}
 				} // ... Step 4
 				
+				currentErrorSum += currentErrorRate;
 				
 				// if the current error rate is less then the lowest one, take the current one as the best
 				if (lowestErrorRate > currentErrorRate) {
@@ -94,7 +100,7 @@ public class AdaBoost {
 			
 			updateTestDataWeights(lowestErrorRate, lowestErrorResults); // ... Step 4
 			
-		}
+		} while (lastErrorSum == 0 || currentErrorSum < lastErrorSum * STOPPINGPERCENTAGE);
 	}
 	
 	/* ****************************************************************************************
