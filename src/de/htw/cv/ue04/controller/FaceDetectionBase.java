@@ -190,7 +190,7 @@ public abstract class FaceDetectionBase {
 		double threshold = thresholdSlider.getValue();
 
 		long startTime = System.currentTimeMillis();
-		doVoilaJones(srcPixels, srcWidth, srcHeight, dstPixels, threshold, testImage, strongClassifier);
+		doVoilaJones(srcPixels, srcWidth, srcHeight, dstPixels, threshold, testImage, strongClassifier, dstWidth, dstHeight);
 
 		rightImageView.setImage(pixelToImage(dstPixels, dstWidth, dstHeight));
 		leftImageView.setImage(pixelToImage(srcPixels, srcWidth, srcHeight));
@@ -198,7 +198,7 @@ public abstract class FaceDetectionBase {
 	}
 
 	protected abstract void doVoilaJones(int[] srcPixels, int srcWidth, int srcHeight, int[] dstPixels, 
-			double threshold, TestImage testImage, ImagePatternClassifier strongClassifier);
+			double threshold, TestImage testImage, ImagePatternClassifier strongClassifier, int dstWidth, int dstHeight);
 
 	public static int[] imageToPixel(Image image) {
 		int width = (int) image.getWidth();

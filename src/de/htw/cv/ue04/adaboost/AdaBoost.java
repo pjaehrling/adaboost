@@ -53,9 +53,9 @@ public class AdaBoost {
 	 */
 	public void train(StrongClassifierMJ strongClassifier) {
 		List<ImagePatternClassifier> classifierList = strongClassifier.getWeakClassifierList();
+		List<ImagePatternClassifier> trainedClassifier = new ArrayList<ImagePatternClassifier>();
 		
-		double lastErrorSum = 0.0;
-		double currentErrorSum  = 0.0;
+		double weightSum = 0.0;
 		
 		do {
 			
@@ -63,9 +63,6 @@ public class AdaBoost {
 			double lowestErrorRate 			= Double.MAX_VALUE;
 			boolean[] lowestErrorResults 	= new boolean[this.trainingsData.size()];
 			int lowestErrorClassifierIndex	= -1; 
-			
-			lastErrorSum = currentErrorSum;
-			currentErrorSum = 0.0;
 		
 			// Normalize the test image weights
 			normalizeTestDataWeights(); // ... Step 1
@@ -84,23 +81,35 @@ public class AdaBoost {
 					currentResults[ci] = isCorrect(classifier, trainingsImage);
 					if (!currentResults[ci]) {
 						currentErrorRate += trainingsImage.getWeight(); // is error, add error
-						// TODO (PJ) Die Formel aus der Folie sieht irgendwie komplizierter aus, aber mit der Tabelle scheint das Sinn zu machen
 					}
 				} // ... Step 4
 				
-				currentErrorSum += currentErrorRate;
-				
 				// if the current error rate is less then the lowest one, take the current one as the best
-				if (lowestErrorRate > currentErrorRate) {
+				if (lowestErrorRate >= currentErrorRate) {
 					lowestErrorRate 			= currentErrorRate;
 					lowestErrorResults 			= currentResults;
 					lowestErrorClassifierIndex 	= ci;
 				} // ... Step 3
 			}
 			
-			updateTestDataWeights(lowestErrorRate, lowestErrorResults); // ... Step 4
+			// Pick best classifier
+			ImagePatternClassifier bestClassifier = classifierList.get(lowestErrorClassifierIndex);
+			// Calculate and set weight for best classifier
+			double beta  = lowestErrorRate / (1 - lowestErrorRate);
+			double alpha = Math.log(1/beta);
+			bestClassifier.setWeight(alpha);
+			// Remove best classifier from list of classifiers and add to list of new better classifiers
+			trainedClassifier.add(bestClassifier);
+			classifierList.remove(lowestErrorClassifierIndex);
+			// Save weak classifier weight for usage in strong classifier threshold
+			weightSum += alpha;
 			
-		} while (lastErrorSum == 0 || currentErrorSum < lastErrorSum * STOPPINGPERCENTAGE);
+			updateTestDataWeights(lowestErrorRate, lowestErrorResults); // ... Step 4
+		} while (classifierList.size() > 0);
+		
+		// Give the strong classifier the new better classifiers and set its threshold
+		strongClassifier.setWeakClassifierList(trainedClassifier);
+		strongClassifier.setWeight(weightSum / 2);
 	}
 	
 	/* ****************************************************************************************
