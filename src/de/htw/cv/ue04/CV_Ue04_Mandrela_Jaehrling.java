@@ -17,7 +17,7 @@ public class CV_Ue04_Mandrela_Jaehrling extends Application {
 		Parent ui = new FXMLLoader(getClass().getResource("view/FaceDetectionView.fxml")).load();
 		Scene scene = new Scene(ui);
 		stage.setScene(scene);
-		stage.setTitle("Face Detection & Ada Boost - Nico Hezel");
+		stage.setTitle("Face Detection & Ada Boost - Mandrela & Jährling");
 		stage.show();
 	}
 
