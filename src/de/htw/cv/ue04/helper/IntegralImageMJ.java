@@ -33,7 +33,7 @@ public class IntegralImageMJ implements IntegralImage {
 	public double meanValue(int x, int y, int areaWidth, int areaHeight) {
 		// make sure the coordinates are in the image
 		if ( x >= width || y >= height ) return 0;
-		if ( x <= 0 || y < 0 ) return 0;
+		if ( x < 0 || y < 0 ) return 0;
 		
 		//System.out.println(x + "/" + y + " --> " + areaWidth + "/" + areaHeight + " --> " + width + "/" + height);
 		

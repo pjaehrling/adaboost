@@ -129,8 +129,13 @@ public class StrongClassifierMJ implements ImagePatternClassifier {
 		g2d.setColor(Color.GREEN);
     	g2d.drawRect(x + area.x, y + area.y, area.width, area.height);
     	
+    	// only draw the best classifiers
+    	double drawingTreshold = getWeight() / weakClassifiers.size();
+    	drawingTreshold *= 7.5;
+    	
     	for (ImagePatternClassifier classifier : weakClassifiers) {
-    		classifier.drawAt(g2d, x, y);
+    		if (classifier.getWeight() > drawingTreshold)
+    			classifier.drawAt(g2d, x, y);
 		}
     	
 	}

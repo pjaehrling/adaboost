@@ -11,36 +11,36 @@ public class ClassifierMJGenerator {
 		ArrayList<ImagePatternClassifier> classifiers = new ArrayList<ImagePatternClassifier>();
 		
 		for (int i = 0; i < num; i++) {
-			classifiers.add(getBasicClassifier(maxWidth, maxHeight, 1.0 / num, 0.5));
+			classifiers.add(getRandomClassifier(15, maxWidth, 15, maxHeight, 1.0 / num, 0.5));
 		}
 		
 		return classifiers;
 	}
 	
-	private static ImagePatternClassifier getBasicClassifier(int maxWidth, int maxHeight, double weight, double treshold) {
+	private static ImagePatternClassifier getRandomClassifier(int minWidth, int maxWidth, int minHeight, int maxHeight, double weight, double treshold) {
 		ImagePatternClassifier classifier;
 		
 		Random rnd = new Random();
 		int form = rnd.nextInt(4);
-		int width = rnd.nextInt(maxWidth / 3);
-		int height = rnd.nextInt(maxHeight / 3);
+		int width = rnd.nextInt(maxWidth - minWidth) + minWidth;
+		int height = rnd.nextInt(maxHeight - minHeight) + minHeight;
 		int x = rnd.nextInt(maxWidth - width);
 		int y = rnd.nextInt(maxHeight - height);
 		switch (form) {
 		case 0:
-			classifier = new DiagonalClassifierMJ(x, y, width, height, weight, treshold);
+			classifier = new DiagonalClassifierMJ(x, y, width / 2, height / 2, weight, treshold);
 			break;
 		case 1:
-			classifier = new EdgeHorizontalClassifierMJ(x, y, width, height, weight, treshold);
+			classifier = new EdgeHorizontalClassifierMJ(x, y, width / 2, height / 2, weight, treshold);
 			break;
 		case 2:
-			classifier = new EdgeVerticalClassifierMJ(x, y, width, height, weight, treshold);
+			classifier = new EdgeVerticalClassifierMJ(x, y, width / 2, height / 2, weight, treshold);
 			break;
 		case 3:
-			classifier = new LineHorizontalClassifierMJ(x, y, width, height, weight, treshold);
+			classifier = new LineHorizontalClassifierMJ(x, y, width / 3, height / 3, weight, treshold);
 			break;
 		case 4:
-			classifier = new LineVerticalClassifierMJ(x, y, width, height, weight, treshold);
+			classifier = new LineVerticalClassifierMJ(x, y, width / 3, height / 3, weight, treshold);
 			break;
 		default:
 			classifier = new ClassifierMJ(x, y, maxWidth, maxHeight);

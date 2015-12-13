@@ -116,6 +116,8 @@ public class FaceDetectionController extends FaceDetectionBase {
 				// berechne den Korrelationswert an jeder Position
 				double correlation = classifier.matchAt(testImage, x, y, 0.0);
 				correlation = normalize(correlation, 0, correlationMax);
+				if (correlation < threshold)
+					correlation = 0;
 				
 				// zeichne das Korrelationsbild
 				int grey = (int)(correlation * 255.0);
