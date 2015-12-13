@@ -105,6 +105,8 @@ public class FaceDetectionController extends FaceDetectionBase {
      	
      	// wie groß ist der Klassifier
 		Rectangle area = classifier.getArea();
+		
+		double correlationMax = classifier.getWeight();
 
 		// durchlaufe das Bild, ignoriere die Ränder
      	for (int y = 0; y < srcHeight-area.getHeight()*0.8; y++) {	
@@ -113,6 +115,7 @@ public class FaceDetectionController extends FaceDetectionBase {
 				
 				// berechne den Korrelationswert an jeder Position
 				double correlation = classifier.matchAt(testImage, x, y, 0.0);
+				correlation = normalize(correlation, 0, correlationMax);
 				
 				// zeichne das Korrelationsbild
 				int grey = (int)(correlation * 255.0);

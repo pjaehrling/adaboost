@@ -109,7 +109,13 @@ public class StrongClassifierMJ implements ImagePatternClassifier {
 
 	@Override
 	public double getWeight() {
-		return 1;
+		double w = 0.0;
+		
+		for (ImagePatternClassifier classifier : weakClassifiers) {
+			w += classifier.getWeight();
+		}
+		
+		return w;
 	}
 
 	@Override

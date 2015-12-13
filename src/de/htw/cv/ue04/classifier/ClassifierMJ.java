@@ -162,7 +162,7 @@ public class ClassifierMJ implements ImagePatternClassifier {
 		double correlation = Math.abs(plusMean - minusMean);
 		correlation = normalize(correlation, 0, 255);
 		
-		return correlation > treshold ? 1 : 0;
+		return correlation > treshold ? correlation : 0;
 	}
 	
 	/**
