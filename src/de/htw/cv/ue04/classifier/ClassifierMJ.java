@@ -66,9 +66,6 @@ public class ClassifierMJ implements ImagePatternClassifier {
 		for (Rectangle rec : minusAreas) {
 			this.addMinusPattern(rec); // add the area
 		}
-		
-		this.area.x = x;
-		this.area.y = y;
 	}
 	
 	
@@ -92,7 +89,7 @@ public class ClassifierMJ implements ImagePatternClassifier {
 		
 		return scaled;
 	}
-	
+
 	/**
 	 * Create a scaled Rectangle from a given one, multiplied by the given scale factor
 	 * 
@@ -211,13 +208,13 @@ public class ClassifierMJ implements ImagePatternClassifier {
 		Color plus = new Color(0x3300FF00, true);
 		for (Rectangle r : plusAreas) {
 			g2d.setColor(plus);
-			g2d.fillRect(x + area.x + r.x, y + area.y + r.y, r.width, r.height);
+			g2d.fillRect(x + r.x, y + r.y, r.width, r.height);
 		}
 		
 		Color minus = new Color(0x33FF0000, true);
 		for (Rectangle r : minusAreas) {
 			g2d.setColor(minus);
-			g2d.fillRect(x + area.x + r.x, y + area.y + r.y, r.width, r.height);
+			g2d.fillRect(x + r.x, y + r.y, r.width, r.height);
 		}
 	}
 }

@@ -6,13 +6,13 @@ import java.util.List;
 
 public class EdgeVerticalClassifierMJ extends ClassifierMJ {
 
-	public EdgeVerticalClassifierMJ(int x, int y, double weight, double treshold) {
+	public EdgeVerticalClassifierMJ(int x, int y, int width, int height, double weight, double treshold) {
 		super(0, 0, 0, 0);
 		
 		List<Rectangle> plusAreas = new ArrayList<Rectangle>();
 		List<Rectangle> minusAreas = new ArrayList<Rectangle>();
-		plusAreas.add( new Rectangle(x, y, 1, 1) );
-    	minusAreas.add( new Rectangle(x + 1, y, 1, 1) );
+		plusAreas.add( new Rectangle(x, y, width, height) );
+    	minusAreas.add( new Rectangle(x + width, y, width, height) );
 		
 		setArea(new Rectangle(x, y, 0, 0)); // adding the plus and minus areas will change the position anyway
 		setWeight(weight);

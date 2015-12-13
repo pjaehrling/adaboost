@@ -12,10 +12,10 @@ import java.util.List;
 
 import de.htw.cv.facedetection.ImagePatternClassifier;
 import de.htw.cv.facedetection.IntegralImage;
-import de.htw.cv.facedetection.RandomClassifier;
 import de.htw.cv.facedetection.TestImage;
 import de.htw.cv.ue04.adaboost.AdaBoost;
 import de.htw.cv.ue04.classifier.ClassifierMJ;
+import de.htw.cv.ue04.classifier.ClassifierMJGenerator;
 import de.htw.cv.ue04.classifier.StrongClassifierMJ;
 import de.htw.cv.ue04.helper.IntegralImageMJ;
 
@@ -32,68 +32,15 @@ public class FaceDetectionController extends FaceDetectionBase {
 
 	@Override
 	protected ImagePatternClassifier createStrongClassifier(int weakClassifierCount) {
-		// TODO erstelle einen untrainierten StrongClassifier mit weakClassifierCount WeakClassifier
-				
-    	// First two classifiers: eye (right/left) = forehead (light), eye area (dark), cheek (light)
-    	ArrayList<Rectangle> plus = new ArrayList<Rectangle>();
-    	ArrayList<Rectangle> minus = new ArrayList<Rectangle>();
-    	plus.add( new Rectangle(0, 0, 1, 1) ); // forehead - top
-    	minus.add( new Rectangle(0, 1, 1, 1) ); // eye area - middle
-    	plus.add( new Rectangle(0, 2, 1, 1) ); // cheek - bottom
+
+    	StrongClassifierMJ sc = new StrongClassifierMJ(ClassifierMJGenerator.getBasicClassifiers(weakClassifierCount, 150, 215));
     	
-    	ImagePatternClassifier eyeLeft = new ClassifierMJ(0, 0, plus, minus, 0.2, 0.5);
-    	ImagePatternClassifier eyeRight = new ClassifierMJ(2, 0, plus, minus, 0.2, 0.5);
-    	eyeLeft = eyeLeft.getScaledInstance(48);
-    	eyeRight = eyeRight.getScaledInstance(48);
-    	
-    	
-    	// Second classifier: nose - left/right (dark) and inner (light)
-    	plus = new ArrayList<Rectangle>();
-    	minus = new ArrayList<Rectangle>();
-    	minus.add( new Rectangle(0, 0, 10, 60) ); // outer nose - left
-    	plus.add( new Rectangle(10, 0, 20, 60) ); // inner nose - middle
-    	minus.add( new Rectangle(30, 0, 10, 60) ); // outer nose - right   	
-    	ImagePatternClassifier nose = new ClassifierMJ(50, 60, plus, minus, 0.2, 0.5);
-    	
-    	// Third classifier: nose end - top (dark) and bottom (light)
-    	plus = new ArrayList<Rectangle>();
-    	minus = new ArrayList<Rectangle>();
-    	minus.add( new Rectangle(0, 0, 40, 15) ); // end nose - top
-    	plus.add( new Rectangle(0, 15, 40, 15) ); // under nose - bottom
-    	ImagePatternClassifier noseEnd = new ClassifierMJ(50, 128, plus, minus, 0.2, 0.5);
- 
-    	
-    	// Third classifier: mouth - top (dark) and chin - bottom (light)
-    	plus = new ArrayList<Rectangle>();
-    	minus = new ArrayList<Rectangle>();
-    	minus.add( new Rectangle(0, 0, 60, 30) ); // mouth - top
-    	plus.add( new Rectangle(0, 30, 60, 30) ); // chin - bottom	
-    	ImagePatternClassifier mouth = new ClassifierMJ(45, 160, plus, minus, 0.2, 0.5);
-    	
-    	// Create weak classifier list and add classifiers
-    	ArrayList<ImagePatternClassifier> weakClassifiers = new ArrayList<ImagePatternClassifier>();
-    	weakClassifiers.add(eyeLeft);
-    	weakClassifiers.add(eyeRight);
-    	weakClassifiers.add(nose);
-    	weakClassifiers.add(noseEnd);
-    	weakClassifiers.add(mouth);
-	
-		StrongClassifierMJ sc = new StrongClassifierMJ(weakClassifiers);
-		
-		// TODO (PJ): Mit weak Classifiern füllen. 
-		// Sein Tipp: Erstmal die aus Übung 3 nehmen und nur das Gewichten testen
 		return sc;
 	}
 
 	@Override
 	protected void trainStrongClassifier(TestImage image, ImagePatternClassifier strongClassifier) {
 		AdaBoost ab = new AdaBoost(image, testImage.getFaceRectangles(), testImage.getNonFaceRectangles());
-		
-		// TODO (PJ)
-		// Mir fällt nichts besseres als der cast ein und die Methode "getWeakClassifierList" in StrongClassifierMJ. 
-		// Wir brauchen beim trainieren dann auf irgend einem Weg alle WeakClassifier.
-		// Durch seinen Aufbau werden auch alle WC vorher zum SC hinzugefügt.
-		// Es gibt aber in ImagePatternClassifier keine Möglichkeit darauf zu zu greifen.
 		
 		ab.train((StrongClassifierMJ) strongClassifier);
 	}
@@ -196,7 +143,6 @@ public class FaceDetectionController extends FaceDetectionBase {
     			
 	    		if (greyNorm > threshold && biggerThanNeighbours(srcPixels, x, y, width, height)) {
 	    			dstPixels[pos] = WHITE;
-	    			System.out.println("WHITE --> " + grey);
 	    		} else {
 	    			dstPixels[pos] = BLACK;
 	    		}

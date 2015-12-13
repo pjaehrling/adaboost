@@ -6,15 +6,15 @@ import java.util.List;
 
 public class DiagonalClassifierMJ extends ClassifierMJ {
 
-	public DiagonalClassifierMJ(int x, int y, double weight, double treshold) {
+	public DiagonalClassifierMJ(int x, int y, int width, int height, double weight, double treshold) {
 		super(0, 0, 0, 0);
 		
 		List<Rectangle> plusAreas = new ArrayList<Rectangle>();
 		List<Rectangle> minusAreas = new ArrayList<Rectangle>();
-		plusAreas.add( new Rectangle(x, y, 1, 1) );
-    	minusAreas.add( new Rectangle(x + 1, y, 1, 1) );
-		plusAreas.add( new Rectangle(x + 1, y + 1, 1, 1) );
-		minusAreas.add( new Rectangle(x, y + 1, 1, 1));
+		plusAreas.add( new Rectangle(x, y, width, height) );
+    	minusAreas.add( new Rectangle(x + width, y, width, height) );
+		plusAreas.add( new Rectangle(x + width, y + height, width, height) );
+		minusAreas.add( new Rectangle(x, y + height, width, height));
 		
 		setArea(new Rectangle(x, y, 0, 0)); // adding the plus and minus areas will change the position anyway
 		setWeight(weight);

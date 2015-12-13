@@ -77,10 +77,11 @@ public class AdaBoost {
 				boolean[] currentResults = new boolean[this.trainingsData.size()]; // save which images got an error
 				
 				// ... with each image
-				for (TrainingsData trainingsImage : this.trainingsData) {
-					currentResults[ci] = isCorrect(classifier, trainingsImage);
-					if (!currentResults[ci]) {
-						currentErrorRate += trainingsImage.getWeight(); // is error, add error
+				//for (TrainingsData trainingsImage : this.trainingsData) {
+				for (int ti = 0; ti < this.trainingsData.size(); ti++) {
+					currentResults[ti] = isCorrect(classifier, this.trainingsData.get(ti));
+					if (!currentResults[ti]) {
+						currentErrorRate += this.trainingsData.get(ti).getWeight(); // is error, add error
 					}
 				} // ... Step 4
 				
@@ -120,8 +121,6 @@ public class AdaBoost {
 		// match the current classifier with the current test image rect
 		double match = classifier.matchAt(image, trainingsImage.getRectX(), trainingsImage.getRectY());
 		
-		// TODO (PJ): Annahme = Wenn der Weak Classifier unter seinem Threshold liegt, ist es kein Gesicht und er liefert 0?
-		// Richtig so?
 		boolean noMatchButFace = (match == 0 && trainingsImage.isFace());
 		boolean matchButNoFace = (match > 0 && !trainingsImage.isFace());
 		

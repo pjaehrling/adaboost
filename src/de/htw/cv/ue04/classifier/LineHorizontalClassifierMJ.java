@@ -6,14 +6,14 @@ import java.util.List;
 
 public class LineHorizontalClassifierMJ extends ClassifierMJ {
 
-	public LineHorizontalClassifierMJ(int x, int y, double weight, double treshold) {
+	public LineHorizontalClassifierMJ(int x, int y, int width, int height, double weight, double treshold) {
 		super(x, y, 0, 0);
 		
 		List<Rectangle> plusAreas = new ArrayList<Rectangle>();
 		List<Rectangle> minusAreas = new ArrayList<Rectangle>();
-		plusAreas.add( new Rectangle(0, 0, 1, 1) );
-    	minusAreas.add( new Rectangle(0, 1, 1, 1) );
-		plusAreas.add( new Rectangle(0, 2, 1, 1) );
+		plusAreas.add( new Rectangle(0, 0, width, height) );
+    	minusAreas.add( new Rectangle(width, 0, width, height) );
+		plusAreas.add( new Rectangle(width * 2, 0, width, height) );
 		
 		setArea(new Rectangle(x, y, 0, 0)); // adding the plus and minus areas will change the position anyway
 		setWeight(weight);
