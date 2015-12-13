@@ -32,7 +32,58 @@ public class FaceDetectionController extends FaceDetectionBase {
 
 	@Override
 	protected ImagePatternClassifier createStrongClassifier(int weakClassifierCount) {
-
+		// Old face classifier
+		/*
+    	// First classifiers: eye (left)
+    	ArrayList<Rectangle> plus = new ArrayList<Rectangle>();
+    	ArrayList<Rectangle> minus = new ArrayList<Rectangle>();
+    	plus.add( new Rectangle(0, 0, 40, 40) ); // forehead - top
+    	minus.add( new Rectangle(0, 40, 40, 40) ); // eye area - middle
+    	plus.add( new Rectangle(0, 80, 40, 40) ); // cheek - bottom
+    	ImagePatternClassifier eyeLeft = new ClassifierMJ(0, 0, plus, minus, 0.2, 0.5);
+    	
+    	// First classifiers: eye (right)
+    	plus = new ArrayList<Rectangle>();
+    	minus = new ArrayList<Rectangle>();
+    	plus.add( new Rectangle(100, 0, 40, 40) ); // forehead - top
+    	minus.add( new Rectangle(100, 40, 40, 40) ); // eye area - middle
+    	plus.add( new Rectangle(100, 80, 40, 40) ); // cheek - bottom
+    	ImagePatternClassifier eyeRight = new ClassifierMJ(0, 0, plus, minus, 0.2, 0.5);
+    	
+    	// Second classifier: nose - left/right (dark) and inner (light)
+    	plus = new ArrayList<Rectangle>();
+    	minus = new ArrayList<Rectangle>();
+    	minus.add( new Rectangle(50, 60, 10, 60) ); // outer nose - left
+    	plus.add( new Rectangle(60, 60, 20, 60) ); // inner nose - middle
+    	minus.add( new Rectangle(80, 60, 10, 60) ); // outer nose - right   	
+    	ImagePatternClassifier nose = new ClassifierMJ(0, 0, plus, minus, 0.2, 0.5);
+    	
+    	// Third classifier: nose end - top (dark) and bottom (light)
+    	plus = new ArrayList<Rectangle>();
+    	minus = new ArrayList<Rectangle>();
+    	minus.add( new Rectangle(50, 128, 40, 15) ); // end nose - top
+    	plus.add( new Rectangle(50, 140, 40, 15) ); // under nose - bottom
+    	ImagePatternClassifier noseEnd = new ClassifierMJ(0, 0, plus, minus, 0.2, 0.5);
+ 
+    	
+    	// Third classifier: mouth - top (dark) and chin - bottom (light)
+    	plus = new ArrayList<Rectangle>();
+    	minus = new ArrayList<Rectangle>();
+    	minus.add( new Rectangle(45, 160, 60, 30) ); // mouth - top
+    	plus.add( new Rectangle(45, 190, 60, 30) ); // chin - bottom	
+    	ImagePatternClassifier mouth = new ClassifierMJ(0, 0, plus, minus, 0.2, 0.5);
+    	
+    	// Create weak classifier list and add classifiers
+    	ArrayList<ImagePatternClassifier> weakClassifiers = new ArrayList<ImagePatternClassifier>();
+    	weakClassifiers.add(eyeLeft);
+    	weakClassifiers.add(eyeRight);
+    	weakClassifiers.add(nose);
+    	weakClassifiers.add(noseEnd);
+    	weakClassifiers.add(mouth);
+	
+		StrongClassifierMJ sc = new StrongClassifierMJ(weakClassifiers);
+		*/
+		
     	StrongClassifierMJ sc = new StrongClassifierMJ(ClassifierMJGenerator.getBasicClassifiers(weakClassifierCount, 150, 215));
     	
 		return sc;
